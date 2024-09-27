@@ -3,20 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
-    <link rel="stylesheet" href="/assets/css/styles.css">
+
+    <!---<link rel="stylesheet" href="/assets/css/styles.css">--->
+    <link rel="preload" href="/assets/css/styles.css" as="style" onload="this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/assets/css/styles.css"></noscript>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+<!---    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> --->
 </head>
+<!---
+<div id="preloader">
+    <div class="loader"></div>
+</div>
+-->
 <body>
-    <nav>
+    <nav class="navbar">
     <ul>
         <li><a href="/">Home</a></li>
+        <li><a href="/research.html">Research</a></li>
+        <li><a href="/teaching.html">Teaching</a></li>
         <li><a href="/resume.html">Resume</a></li>
         <li><a href="/contact.html">Contact</a></li>
     </ul>
+    <div class="theme-toggle" id="theme-toggle">
+        <div class="toggle-circle"></div>
+    </div>
 </nav>
-    <main>
-        <header>
+    <script src="/assets/js/main.js" defer></script>
+    <div class="container"><main class="teaching-container">
+    <section class="teaching-header">
+      <h1>Teaching</h1>
+     <!--- <h2>Ressources and links</h2>-->
+     <h2>(Coming soon)</h2>
+    </section>
+
+    <section class="teaching-section">
+      <h2>Lectures</h2>
+      <ul class="teaching-list">
+        <li><a href="link-to-resource" >Course 1</a></li>
+<!---   <li>Course Title 2 - <a href="link-to-resource">Resource 2</a></li>
+        <li>Course Title 3 - <a href="link-to-resource">Resource 3</a></li>-->
+      </ul>
+    </section>
+
+    <section class="teaching-section">
+      <h2>Exercices</h2>
+      <ul class="teaching-list">
+        <li><a href="link-to-resource">Exercice list 1</a></li>
+<!---         <li>Workshop Title 2 - <a href="link-to-resource">Resource 2</a></li>-->
+      </ul>
+    </section>
+
+    <section class="teaching-section">
+      <h2>Extra Resources</h2>
+      <ul class="teaching-list">
+        <li><a href="link-to-resource">Resource 1</a></li>
+        <li><a href="link-to-resource">Resource 2</a></li>
+        <li><a href="link-to-resource">Resource 3</a></li>
+      </ul>
+    </section>
+</main>
+
+
+<!---
+<header>
     <h1>Teaching</h1>
 </header>
 <main>
@@ -25,6 +78,26 @@
 <footer>
     <p>2024</p>
 </footer>
-    </main>
+--></div>
+    
 </body>
+<footer class="footer">
+    <div class="footer-content"></div>
+    <a href="mailto:mathieudabrowski@outlook.com" class="footer-link" title="Email">
+        <img id="mail-logo" src="/assets/images/mail_dark.png" alt="Email" class="footer-icon">
+    </a>
+    <a href="https://github.com/mathieudabrowski" class="footer-link" title="GitHub">
+        <img id="github-logo" src="/assets/images/github_dark.png" alt="GitHub" class="footer-icon">
+    </a>
+    </a>
+    <a href="https://fr.linkedin.com/in/mathieu-dabrowski-bb6503239" class="footer-link" title="Linkedin">
+        <img id="linkedin-logo" src="/assets/images/linkedin_dark.png" alt="Linkedin" class="footer-icon">
+    </a>
+    </div>
+    <div class="footer-text">
+        <p><!---&copy---> <span id="year"></span> Mathieu Dabrowski</p>
+        <!--- <p><a href="/privacy.html">Privacy Policy</a> | <a href="/terms.html">Terms of Service</a></p> --->
+    </div>
+</footer>
+
 </html>

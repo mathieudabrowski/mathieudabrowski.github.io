@@ -1,12 +1,431 @@
 ---
 layout: default
 ---
-<header>
+<!-- 
+<header class="header-container">
     <h1>Contact</h1>
 </header>
+-->
+
+<section id="contact">
+    <h1>Contact</h1>
+    
+    <div class="contact-info">
+        <h2>Email</h2>
+        <p class="email">
+           <script type="text/javascript">
+            // JavaScript to obfuscate the email
+            var emailUser = "mathieudabrowski";  
+            var emailDomain = "outlook.com";  
+            document.write('<a href="mailto:' + emailUser + '@' + emailDomain + '">' + emailUser + '@' + emailDomain + '</a>');
+          </script>
+        </p>
+
+        <h2>Address</h2>
+        <address>
+            LAPTh, CNRS UMR 5108<br>
+            Université Savoie Mont Blanc<br>
+            9 Chemin de Bellevue<br>
+            74940 Annecy-le-Vieux<br>
+            France
+        </address>
+    </div>
+
+
+</section>
+<div class="map-container">
+    <div id="map"></div>
+</div>
+
+
+<!---
+    <section class="contact-info">
+        <h2>Get in Touch</h2>
+        <p><strong>Email:</strong> <a href="mailto:mathieudabrowski@outlook.com">mathieudabrowski@outlook.com</a></p>
+        <p><strong>Address:</strong> 9 Chemin de Bellevue, 74940 Annecy, France</p>
+        
+    </section>
+--->
+
+
+
+
+<!---
+<div id="windy" style="display:none;"></div>
+<div id="utc-time" class="utc-time" style="position: absolute; top: 10px; right: 10px; background: rgba(255, 255, 255, 0.8); padding: 5px; border-radius: 5px; z-index: 1000;"></div>
+--->
+<!---
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
+-->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+
+
+
+
+<script>
+    // Initialize the map
+    var map = L.map('map').setView([45.92118, 6.15938], 13);
+
+    // Add a base layer (OpenStreetMap)
+    var baseLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Optionally, add different layers
+    var topoLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+        maxZoom: 17,
+        attribution: '© OpenTopoMap'
+    });
+/*
+    var terrainLayer = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}.jpg', {
+    attribution: 'Map tiles by Stamen Design'
+    });
+
+    var waterLayer = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg', {
+    attribution: 'Map tiles by Stamen Design'
+});
+
+
+    var lightLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution: '© OpenStreetMap contributors & CartoDB'
+});
+
+    var darkLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '© OpenStreetMap contributors & CartoDB'
+});
+*/
+
+    var esriLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    attribution: '© Esri & contributors'
+    });
+
+    // Add a marker
+    var marker = L.marker([45.92118, 6.15938]).addTo(map)
+        .bindPopup('LAPTh')
+        .openPopup();
+
+ 
+    // Create the layer control and make sure the base layer is selected by default
+    var baseLayers = {
+    "Default Layer": baseLayer,
+    "Topo Layer": topoLayer,
+/*    "Terrain Layer": terrainLayer,
+    "Water Layer": waterLayer,
+    "Light Layer": lightLayer,
+    "Dark Layer": darkLayer,*/
+    "Satellite Layer": esriLayer,
+    };
+
+
+    var overlayLayers = {};
+    
+
+    var layerControl = L.control.layers(baseLayers, overlayLayers).addTo(map);
+
+
+    var legend = L.control({position: 'bottomright'});
+
+    var rainviewerAttribution = '© RainViewer | Data Time: ';
+
+        // Function to update the attribution with UTC time
+    function updateAttribution(timestamp) {
+        const date = new Date(timestamp * 1000); // Convert UNIX timestamp to milliseconds
+        const utcTimeString = date.toUTCString();
+        map.attributionControl.setPrefix(rainviewerAttribution + utcTimeString);
+    }
+
+    function resetAttribution() {
+        map.attributionControl.setPrefix('');
+
+    }
+    var isRadarActive = false;
+    var isSatelliteActive = false;
+
+    function checkAndUpdateAttribution(timestamp) {
+        if (isRadarActive || isSatelliteActive) {
+            updateAttribution(timestamp);
+        } else {
+            resetAttribution();
+        }
+    }
+
+
+
+    var rainIntensityColors = [
+        { intensity: 'Overcast', color: '#cdbf86' }, 
+        { intensity: 'Drizzle', color: '#88ddee' }, 
+        { intensity: 'Light Rain', color: '#0077aa' }, 
+        { intensity: 'Moderate Rain', color: '#ffee00' }, 
+        { intensity: 'Shower', color: '#ff4400' }, 
+        { intensity: 'Hail', color: '#ffaaff' },
+        ];
+
+        legend.onAdd = function () {
+        var div = L.DomUtil.create('div', 'info legend');
+        div.innerHTML = '<h4>Legend</h4>';
+        rainIntensityColors.forEach(function (item) {
+            div.innerHTML += '<i style="background:' + item.color + '"></i> ' + item.intensity + '<br>';
+        });
+        return div;
+    };
+
+    /*const windyApiKey = 'dld35pxVu5i45ZTQaHYfLvYK6BFT1SR5';
+
+    const windyScript = document.createElement('script');
+    windyScript.src = `https://api.windy.com/assets/map-forecast/libBoot.js`;
+    document.body.appendChild(windyScript);
+
+    windyScript.onload = function() {
+        windyInit({
+            key: windyApiKey,  // Use your API key
+            lat: 45.92118,     // Starting latitude
+            lon: 6.15938,      // Starting longitude
+            zoom: 5,           // Initial zoom level
+            overlay: 'temp'    // Overlay to display (temperature)
+        }, function(windyAPI) {
+            const { map: windyMap } = windyAPI;
+            
+            // Windy map is now loaded
+            console.log('Windy map loaded');
+
+            // Create an overlay for Windy API on the Leaflet map
+            const temperatureLayer = L.layerGroup();
+            map.addLayer(temperatureLayer);
+
+            // Function to toggle Windy layer
+            const windyLayerControl = L.control.layers(null, {
+                "Windy Temperature": temperatureLayer
+            }).addTo(map);
+
+            // Event listeners for overlay add/remove to sync Windy layer
+            map.on('overlayadd', function(e) {
+                if (e.name === "Windy Temperature") {
+                    windyMap.addLayer(windyAPI.store.get('temp'));
+                }
+            });
+
+            map.on('overlayremove', function(e) {
+                if (e.name === "Windy Temperature") {
+                    windyMap.removeLayer(windyAPI.store.get('temp'));
+                }
+            });
+        });
+    };*/
+
+
+        // Function to add RainViewer radar layer
+    function addRainViewerLayers() {
+        return fetch('https://api.rainviewer.com/public/weather-maps.json')
+            .then(response => response.json())
+            .then(data => {
+                var host = data.host;
+
+                var radarTimestamps = data.radar.past;
+                var latestRadarFrame = radarTimestamps[radarTimestamps.length - 1];
+                var latestRadarPath = latestRadarFrame.path; // Radar path
+                var latestRadarTimestamp = latestRadarFrame.time; // UNIX timestamp
+
+                var satelliteInfrared = data.satellite.infrared;
+                var latestSatellite = satelliteInfrared[satelliteInfrared.length - 1].path;
+
+                var radarLayer = L.tileLayer(`${host}${latestRadarPath}/256/{z}/{x}/{y}/2/1_1.png`, {
+                    opacity: 0.7,
+                    attribution: rainviewerAttribution + new Date(latestRadarTimestamp * 1000).toUTCString()
+                });
+
+                var satelliteLayer = L.tileLayer(`${host}${latestSatellite}/256/{z}/{x}/{y}/0/1_1.png`, {
+                opacity: 0.7,
+                attribution: rainviewerAttribution + new Date(latestRadarTimestamp * 1000).toUTCString()
+                });
+
+                return {
+                radarLayer: radarLayer,
+                satelliteLayer: satelliteLayer,
+                RadarTimestamp: latestRadarTimestamp,
+            };
+
+            })
+            .catch(error => console.error('Error loading radar data:', error));
+    }
+
+ /*   addRainViewerLayers().then(function(layers) {
+    overlayLayers["Radar Layer"] = layers.radarLayer;
+    overlayLayers["Satellite Layer"] = layers.satelliteLayer;
+
+   // console.log("Overlay Layers populated:", overlayLayers);
+   
+        
+        
+
+        layerControl.addOverlay(layers.radarLayer, "Radar");
+        layerControl.addOverlay(layers.satelliteLayer, "Infrared satellite ");
+
+        restoreOverlayLayers();
+
+        // Handle layer toggling
+        map.on('overlayadd', function(e) {
+            if (e.name === "Radar Layer") {
+                isRadarActive = true; // Update time only when radar is toggled on
+            } else if (e.name === "Satellite Layer") {
+                isSatelliteActive = true; // Use radar time, adjust if needed for satellite
+            }
+
+            checkAndUpdateAttribution(layers.RadarTimestamp);
+        });
+
+        map.on('overlayremove', function(e) {
+                if (e.name === "Radar Layer") {
+                    isRadarActive = false;
+                }else if (e.name === "Satellite Layer"){
+                    isSatelliteActive = false;
+                }
+            checkAndUpdateAttribution(layers.RadarTimestamp);
+
+        });
+        
+        layers.radarLayer.on('add', function () {
+                map.addControl(legend);
+        });
+
+
+        // Hide the legend when the radar layer is removed
+        layers.radarLayer.on('remove', function () {
+            map.removeControl(legend);
+        });
+        
+    });
+
+    L.control.scale().addTo(map);
+    restoreLayers();
+    
+    
+    
+    function storeLayers() {
+        const baseLayerName = Object.keys(baseLayers).find(layer => map.hasLayer(baseLayers[layer])) || 'Default Layer';
+        localStorage.setItem('selectedBaseLayer', baseLayerName);
+
+        const activeOverlays = Object.keys(overlayLayers).filter(layer => map.hasLayer(overlayLayers[layer]));
+        localStorage.setItem('activeOverlays', JSON.stringify(activeOverlays));
+    }
+
+    function restoreLayers() {
+        const savedBaseLayer = localStorage.getItem('selectedBaseLayer');
+        // Restore base layer
+        if (savedBaseLayer && baseLayers[savedBaseLayer]) {
+            map.addLayer(baseLayers[savedBaseLayer]);
+        } else {
+            map.addLayer(baseLayer);  // Default to the base layer if none is saved
+        }
+
+    
+    }
+    function restoreOverlayLayers() {
+        const savedActiveOverlays = JSON.parse(localStorage.getItem('activeOverlays'))
+    // setTimeout(checkActiveOverlays(savedActiveOverlays), 1000);
+        savedActiveOverlays.forEach(layer => {
+        //console.log(`Checking layer: ${layer} against overlayLayers keys`, Object.keys(overlayLayers));
+        if (overlayLayers[layer]) {
+            map.addLayer(overlayLayers[layer]);
+        }
+    });
+
+    }
+    */
+
+
+
+    function storeLayers() {
+        const baseLayerName = Object.keys(baseLayers).find(layer => map.hasLayer(baseLayers[layer])) || 'Default Layer';
+        localStorage.setItem('selectedBaseLayer', baseLayerName);
+
+        const activeOverlays = Object.keys(overlayLayers).filter(layer => map.hasLayer(overlayLayers[layer]));
+        localStorage.setItem('activeOverlays', JSON.stringify(activeOverlays));
+    }
+
+    // Restore base and overlay layers from localStorage
+    function restoreLayers() {
+        const savedBaseLayer = localStorage.getItem('selectedBaseLayer');
+        const savedActiveOverlays = JSON.parse(localStorage.getItem('activeOverlays')) || [];
+
+        // Restore base layer
+        if (savedBaseLayer && baseLayers[savedBaseLayer]) {
+            map.eachLayer(function (layer) {
+                map.removeLayer(layer); // Remove any pre-existing layers
+            });
+            map.addLayer(baseLayers[savedBaseLayer]);
+        } else {
+            map.addLayer(baseLayer);  // Default to the base layer if none is saved
+        }
+
+        // Restore overlay layers after they are loaded
+        addRainViewerLayers().then(function(layers) {
+            overlayLayers["Radar Layer"] = layers.radarLayer;
+            overlayLayers["Satellite Layer"] = layers.satelliteLayer;
+
+            // Add overlays to the control
+            layerControl.addOverlay(layers.radarLayer, "Radar");
+            layerControl.addOverlay(layers.satelliteLayer, "Infrared satellite");
+
+            // Now that the overlays are loaded, restore active overlays
+            savedActiveOverlays.forEach(layer => {
+                if (overlayLayers[layer]) {
+                    map.addLayer(overlayLayers[layer]);
+                    if (layer === "Radar Layer") {
+                        map.addControl(legend);
+                    }
+                }
+            });
+
+            layers.radarLayer.on('add', function () {
+            map.addControl(legend);  // Show the legend when radar is activated
+            });
+
+            layers.radarLayer.on('remove', function () {
+                map.removeControl(legend);  // Hide the legend when radar is deactivated
+            });
+
+            // Add a marker
+            var marker = L.marker([45.92118, 6.15938]).addTo(map)
+                .bindPopup('LAPTh')
+                .openPopup();
+
+            L.control.scale().addTo(map);
+
+
+            // Handle layer toggling
+            map.on('overlayadd', function(e) {
+                storeLayers();
+            });
+
+            map.on('overlayremove', function(e) {
+                storeLayers();
+            });
+
+            
+        });
+    }
+
+    // Call restoreLayers on page load
+    restoreLayers();
+
+    // Base layer change listener
+    map.on('baselayerchange', function(event) {
+        storeLayers();
+    });
+
+</script>
+
+
+<!---
+<img 
+    src="https://maps.googleapis.com/maps/api/staticmap?center=45.9212441028284,6.156832476035328&zoom=15&size=800x450&key=YOUR_API_KEY" 
+    alt="Map of my workplace" 
+    style="width: 100%; border-radius: 10px;">
 <main>
     <p>Contact info : mail, labo adress...</p>
 </main>
-<footer>
-    <p>2024</p>
-</footer>
+-->
