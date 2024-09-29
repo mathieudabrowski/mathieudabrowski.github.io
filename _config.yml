@@ -1,8 +1,6 @@
 url: "https://mathieudabrowski.github.io"
 plugins:
   - jekyll-sitemap
-  - jekyll-seo-tag
 
-seo:
-  google_site_verification: "64zkGmk66SDAijS3sKaBkGS0NfT3WViRrUv1nC9vAlo"
+google_site_verification: "64zkGmk66SDAijS3sKaBkGS0NfT3WViRrUv1nC9vAlo"
 
