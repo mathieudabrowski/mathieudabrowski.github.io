@@ -1,3 +1,4 @@
+url: "https://mathieudabrowski.github.io"
 plugins:
   - jekyll-sitemap
   - jekyll-seo-tag
