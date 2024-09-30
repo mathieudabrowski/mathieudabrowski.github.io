@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
-<loc>https://mathieudabrowski.github.io/contact.html</loc>
+<loc>http://localhost:4000/contact.html</loc>
 </url>
 <url>
-<loc>https://mathieudabrowski.github.io/</loc>
+<loc>http://localhost:4000/</loc>
 </url>
 <url>
-<loc>https://mathieudabrowski.github.io/research.html</loc>
+<loc>http://localhost:4000/research.html</loc>
 </url>
 <url>
-<loc>https://mathieudabrowski.github.io/resume.html</loc>
+<loc>http://localhost:4000/resume.html</loc>
 </url>
 <url>
-<loc>https://mathieudabrowski.github.io/teaching.html</loc>
+<loc>http://localhost:4000/teaching.html</loc>
 </url>
 <url>
-<loc>https://mathieudabrowski.github.io/assets/pdfs/resume.pdf</loc>
+<loc>http://localhost:4000/assets/pdfs/resume.pdf</loc>
 <lastmod>2024-09-29T19:14:58+02:00</lastmod>
 </url>
 </urlset>
