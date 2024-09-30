@@ -71,6 +71,7 @@ function updateLogos(theme) {
 }
 
 
+
 /*Automatic footer date */
 document.addEventListener('DOMContentLoaded', function() {
     const yearElement = document.getElementById('year');
@@ -89,9 +90,14 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 */
 
+window.onload = function() {
+    /*document.body.style.visibility = 'visible';*/
+    document.body.style.opacity = '1';
+};
+/*
 document.addEventListener('DOMContentLoaded', function () {
     document.body.style.visibility = 'visible';
-  });
+  });*/
   /*
 window.addEventListener('load', function() {
     document.body.style.visibility = 'visible';
