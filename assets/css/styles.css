@@ -758,6 +758,7 @@ padding-bottom: 5px;
     .navbar{
         flex-direction: column;
         align-items: center;
+        /*justify-content: center;*/
         padding: 15px 10px; 
         height: auto;
 
@@ -767,17 +768,22 @@ padding-bottom: 5px;
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
 /*        gap: 5px;*/
-        width: 100%;
+        /*width: 100%;*/
+        width: auto;
+        padding: 0;
     }
 
     .navbar li {
-        width: 100%; 
+        /*width: 100%; */
+        width: auto;
     }
 
     .navbar a{
         padding: 10px 0;
-        width: 100%;
+        /*width: 100%;*/
+        width: auto;
         text-align: center;
     }
 
