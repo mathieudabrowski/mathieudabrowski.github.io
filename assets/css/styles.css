@@ -640,6 +640,23 @@ padding-bottom: 5px;
 }
 
 
+
+/* Styling for the PDF/DOI/arXiv links */
+.paper-link {
+    color: var(--text-color); /* The purple color from your theme */
+    text-decoration: none;
+    margin-left: 8px; /* Adds a small gap between the links */
+    transition: color 0.3s ease;
+}
+
+.paper-link:hover {
+    color: var(--hover-text-color); /* Uses your existing light/dark mode hover color */
+}
+
+
+
+
+
 .home-container {
     margin: 0 auto;
     padding: 40px 10px;
